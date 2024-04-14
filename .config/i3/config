@@ -196,3 +196,8 @@ gaps left 8
 gaps right 8
 
 
+# Title
+default_border none
+bindsym $mod+u border none
+
+
