@@ -37,8 +37,8 @@ then
 fi
 
 
-if [[ $(command -v zsh) ]]
-then
+#if [[ $(command -v zsh) ]]
+#then
 	echo "Instalando ZSH y ZIM"
 	if [ $pkg_manager = "pacman" ]
 	then
@@ -49,7 +49,7 @@ then
 		zimfw install
 
 	fi
-fi
+#fi
 
 #echo "Instalando Alacriti"
 #if [ $pkg_manager = "pacman" ]
@@ -66,18 +66,24 @@ then
 	echo "Instalando Kitty"
 	if [ $pkg_manager = "pacman" ]
 	then
-		pacman -S --noconfirm kitty 
+		sudo pacman -S --noconfirm kitty 
 		THEME=https://raw.githubusercontent.com/dexpota/kitty-themes/master/themes/Espresso.conf
 		wget "$THEME" -P ~/.config/kitty/kitty-themes/themes
+		rm ~/.config/kitty/theme.conf
 		cd ~/.config/kitty && ln -s ./kitty-themes/themes/Espresso.conf ~/.config/kitty/theme.conf
 	fi
 fi
 
-echo "Instalando YADM"
-if [ $pkg_manager = "pacman" ]
+
+if [[ $(command -v yadm) ]]
 then
-	sudo pacman -S --noconfirm yadm
-	yadm clone git@github.com:edavidfs/dotfiles_linux.git
+	echo "Instalando YADM"
+	if [ $pkg_manager = "pacman" ]
+	then
+		#sudo pacman -S --noconfirm yadm
+		#yadm clone git@github.com:edavidfs/dotfiles_linux.git
+		echo "No he instalado yadm"
+	fi
 fi
 
 
