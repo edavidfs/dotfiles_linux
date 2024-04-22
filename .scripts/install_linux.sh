@@ -54,6 +54,15 @@ else
 
 	fi
 fi
+ 
+if [[ $(command -v paru) ]]
+then
+	echo "Paru ya esta instalado"
+else
+	git clone https://aur.archlinux.org/paru-bin.git
+	cd paru-bin
+	makepkg -si
+fi
 
 if [[ $(command -v 1password) ]]
 then
@@ -112,6 +121,14 @@ else
 	fi
 fi
 
+if [[ $(command -v tailscaled) ]]
+then
+	echo "TailScales ya esta instalado"
+else
+	sudo pacman -S tailscale
+	sudo systemctl enable --now tailscaled
+	sudo tailscale up
+fi
 
 if [[ $(command -v feh) ]]
 then
