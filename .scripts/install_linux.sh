@@ -29,6 +29,8 @@ fi
 
 if [[ $(command -v rofi) ]]
 then
+	echo "Rofi ya esta instalado"
+else
 	echo "Instalando Rofi"
 	if [ $pkg_manager = "pacman" ]
 	then
@@ -37,32 +39,42 @@ then
 fi
 
 
-#if [[ $(command -v zsh) ]]
-#then
+if [[ $(command -v zsh) ]]
+then
+	echo "ZSH ya esta instalado"
+else
 	echo "Instalando ZSH y ZIM"
 	if [ $pkg_manager = "pacman" ]
 	then
 		sudo pacman -S --noconfirm zsh
-		chsh -s $(which zsh)
+		#chsh -s $(which zsh)
 
-		curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
-		zimfw install
+	#	curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
+	#	zimfw install
 
 	fi
-#fi
+fi
 
-#echo "Instalando Alacriti"
-#if [ $pkg_manager = "pacman" ]
-#then
-#	curl https://sh.rustup.rs -sSf | sh
-#	pacman -S --noconfirm cmake freetype2 fontconfig pkg-config make libxcb libxkbcommon python
-#	cargo install alacritty
-#fi
+if [[ $(command -v 1password) ]]
+then
+	echo "1Password instalado"
+else
+	if [ $pkg_manager = "pacman" ]
+	then
+		echo "Instalando 1Password"
+		curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
+		git clone https://aur.archlinux.org/1password.git
+		cd 1password
+		makepkg -si
+	fi
+fi
 
 
 
 if [[ $(command -v kitty) ]]
 then
+	echo "Kitty Instalado"
+else
 	echo "Instalando Kitty"
 	if [ $pkg_manager = "pacman" ]
 	then
@@ -77,6 +89,8 @@ fi
 
 if [[ $(command -v yadm) ]]
 then
+	echo "YADM ya esta instalado"
+else
 	echo "Instalando YADM"
 	if [ $pkg_manager = "pacman" ]
 	then
@@ -89,6 +103,8 @@ fi
 
 if [[ $(command -v code) ]]
 then
+	echo "Visual Studio Code ya esta instalado"
+else
 	echo "Instalando vscode"
 	if [ $pkg_manager = "pacman" ]
 	then
