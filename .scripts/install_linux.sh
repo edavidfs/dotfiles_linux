@@ -12,6 +12,11 @@ then
 		echo "Actualizando sistema"
 		sudo pacman -Syu
  	fi
+ 	if [[ -f /etc/debian_version ]]
+	then
+		echo "Instalando para debian"
+		pkg_manager=apt
+	fi
 fi
 
 echo "Instalando git"
@@ -20,11 +25,20 @@ then
 	sudo pacman -S --noconfirm git
 fi
 
-
-echo "Instalando NeoVim + clipboard"
-if [ $pkg_manager = "pacman" ]
+if [[ $(command -v nvim) ]]
 then
-	sudo pacman -S --noconfirm neovim xclip
+	echo "NeoVim ya esta instalado"
+else
+	echo "Instalando NeoVim + clipboard"
+	if [ $pkg_manager = "pacman" ]
+	then
+		sudo pacman -S --noconfirm neovim xclip
+	fi
+
+	if [ $pkg_manager = "apt" ]
+	then
+		sudo apt install -y neovim xclip
+	fi
 fi
 
 if [[ $(command -v rofi) ]]
@@ -35,6 +49,10 @@ else
 	if [ $pkg_manager = "pacman" ]
 	then
 		sudo pacman -S --noconfirm rofi
+	fi
+	if [ $pkg_manager = "apt" ]
+	then
+		sudo apt install -y rofi
 	fi
 fi
 
@@ -53,15 +71,22 @@ else
 	#	zimfw install
 
 	fi
+	if [ $pkg_manager = "apt" ]
+	then
+		sudo apt install -y zsh
+	fi
 fi
  
 if [[ $(command -v paru) ]]
 then
 	echo "Paru ya esta instalado"
 else
-	git clone https://aur.archlinux.org/paru-bin.git
-	cd paru-bin
-	makepkg -si
+	if [ $pkg_manager = "pacman" ]
+	then
+		git clone https://aur.archlinux.org/paru-bin.git
+		cd paru-bin
+		makepkg -si
+	fi
 fi
 
 if [[ $(command -v 1password) ]]
@@ -76,6 +101,19 @@ else
 		cd 1password
 		makepkg -si
 	fi
+
+	if [ $pkg_manager = "apt" ]
+	then
+		curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+		echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | sudo tee /etc/apt/sources.list.d/1password.list
+		sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+		curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+		sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+		curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+		sudo apt update && sudo apt install -y 1password
+
+	fi
+
 fi
 
 
@@ -128,6 +166,16 @@ else
 	sudo pacman -S tailscale
 	sudo systemctl enable --now tailscaled
 	sudo tailscale up
+fi
+
+if [[ $(command -v sshd) ]]
+then
+	echo "Openssh ya esta instalado"
+else
+	if [ $pkg_manager = "apt" ]
+	then
+		sudo apt install -y openssh-server
+	fi
 fi
 
 if [[ $(command -v feh) ]]
